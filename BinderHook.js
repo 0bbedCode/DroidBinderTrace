@@ -195,13 +195,11 @@ let FIRST_CALL_TRANSACTION = 0x00000001;
 let LAST_CALL_TRANSACTION = 0x00ffffff;
 		
 
-function hookBpBinder() {
+function hookBinder() {
 	try {
 		let bpBinder = new CPPParcelMapper("BpBinder");
 		let bBinder = new CPPParcelMapper("BBinder");
-		
 		//let allTransactExports = bpBinder.filteredExports.concat(bBinder.filteredExports);
-		
 		hookBinderTransact(bpBinder);
 		hookBinderTransact(bBinder);
 	} catch(e) {
@@ -264,8 +262,14 @@ function hookBinderTransact(mapper) {
 	}
 }
 
+
+//Remove Java.perform since Java is not used and Some Services dont have Java Environment
+hookBinder();
+if(Java.isAvailable) {
 setTimeout(function() {
     Java.perform(function() {
-		hookBpBinder();
-    });
-}, 0);
+		//hookBinder();
+		});
+	}, 0);	
+}
+
